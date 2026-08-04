@@ -9,7 +9,9 @@ import 'package:shopping_app/features/account/presentation/view_model/account_cu
 import 'package:shopping_app/features/account/presentation/view_model/account_intent.dart';
 import 'package:shopping_app/features/auth/presentation/view/login_screen.dart';
 import 'package:shopping_app/features/auth/presentation/view/register_screen.dart';
-import 'package:shopping_app/features/auth/presentation/view_model/cubit/register_cubit.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/launcher/cubit/launcher_cubit.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/login/login_cubit.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/register/register_cubit.dart';
 import 'package:shopping_app/features/cart/presentation/view/screens/cart_screen.dart';
 import 'package:shopping_app/features/cart/presentation/view_model/cart_cubit.dart';
 import 'package:shopping_app/features/category/presentation/view/category_screen.dart';
@@ -85,12 +87,18 @@ class AppRouter {
               BlocProvider<HelloCubit>(
                 create: (context) => serviceLocator<HelloCubit>(),
               ),
+              BlocProvider(create: (_) => serviceLocator<LauncherCubit>()),
             ],
             child: LauncherScreen(),
           ),
         );
       case AppRoutes.loginRoute:
-        return MaterialPageRoute(builder: (context) => LoginScreen());
+        return MaterialPageRoute(
+          builder: (context) => BlocProvider(
+            create: (context) => serviceLocator<LoginCubit>(),
+            child: LoginScreen(),
+          ),
+        );
       case AppRoutes.registerRoute:
         return MaterialPageRoute(
           builder: (context) => BlocProvider<RegisterCubit>(

@@ -1,12 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/common/widgets/app_btns.dart';
 import 'package:shopping_app/core/common/widgets/custom_text_form_field.dart';
 import 'package:shopping_app/core/constants/app_spacing.dart';
+import 'package:shopping_app/core/di/service_locator.dart';
 import 'package:shopping_app/core/routing/app_routes.dart';
 import 'package:shopping_app/core/theme/app_colors.dart';
 import 'package:shopping_app/core/theme/app_theme.dart';
+import 'package:shopping_app/core/utils/app_dialog.dart';
+import 'package:shopping_app/core/utils/app_toastfication.dart';
 import 'package:shopping_app/core/utils/validator.dart';
+import 'package:shopping_app/features/auth/domain/usecase/get_token_usecase.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/login/login_cubit.dart';
+import 'package:toastification/toastification.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,8 +25,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final emailController = TextEditingController(
+    text: "hassanamr841981@gmail.com",
+  );
+  final passwordController = TextEditingController(text: "hassanAMR@123");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,44 +41,81 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.x2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            verticalSpace(30),
-            Text("Email", style: AppTheme.lightTheme.textTheme.headlineMedium),
-            verticalSpace(5),
-            CustomTextFormField(
-              controller: emailController,
-              validator: Validator.validateEmail,
-              hintText: "Enter your email",
-              keyboardType: TextInputType.emailAddress,
-              action: TextInputAction.next,
+      body: BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) async {
+          if (state is LoginLoading) {
+            AppDialogs.showLoadingDialog(context);
+            return;
+          }
+          if (state is LoginSuccess) {
+            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, AppRoutes.appSection);
+            final token = await serviceLocator<GetTokenUseCase>().invoke();
+            debugPrint("TOKEN = $token");
+          }
+          if (state is LoginError) {
+            Navigator.pop(context);
+            AppToast.showToast(
+              context: context,
+              title: 'error',
+              description: state.errorMessage,
+              type: ToastificationType.error,
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.x2),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                verticalSpace(30),
+                Text(
+                  "Email",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: emailController,
+                  validator: Validator.validateEmail,
+                  hintText: "Enter your email",
+                  keyboardType: TextInputType.emailAddress,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(30),
+                Text(
+                  "Password",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: passwordController,
+                  validator: Validator.validatePassword,
+                  hintText: "Enter your password",
+                  isPassword: true,
+                  keyboardType: TextInputType.emailAddress,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(30),
+                PrimaryBtn(
+                  onPressed: () {
+                    if (!formKey.currentState!.validate()) return;
+                    context.read<LoginCubit>().intent(
+                      LoginIntentLogin(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Login",
+                    style: AppTheme.lightTheme.textTheme.labelMedium,
+                  ),
+                ),
+              ],
             ),
-            verticalSpace(30),
-            Text(
-              "Password",
-              style: AppTheme.lightTheme.textTheme.headlineMedium,
-            ),
-            verticalSpace(5),
-            CustomTextFormField(
-              controller: passwordController,
-              validator: Validator.validatePassword,
-              hintText: "Enter your password",
-              isPassword: true,
-              keyboardType: TextInputType.emailAddress,
-              action: TextInputAction.next,
-            ),
-            verticalSpace(30),
-            PrimaryBtn(
-              onPressed: () {},
-              child: Text(
-                "Login",
-                style: AppTheme.lightTheme.textTheme.labelMedium,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

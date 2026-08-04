@@ -11,7 +11,7 @@ import 'package:shopping_app/core/utils/app_dialog.dart';
 import 'package:shopping_app/core/utils/app_toastfication.dart';
 import 'package:shopping_app/core/utils/validator.dart';
 import 'package:shopping_app/features/auth/domain/entity/register_entity.dart';
-import 'package:shopping_app/features/auth/presentation/view_model/cubit/register_cubit.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/register/register_cubit.dart';
 import 'package:toastification/toastification.dart';
 
 class RegisterScreen extends StatefulWidget {

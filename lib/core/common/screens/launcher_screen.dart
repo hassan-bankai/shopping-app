@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/constants/app_assets.dart';
 import 'package:shopping_app/core/routing/app_routes.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/launcher/cubit/launcher_cubit.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/login/login_cubit.dart';
 import 'package:shopping_app/features/hello/presentation/view_model/hello_cubit.dart';
 import 'package:shopping_app/features/hello/presentation/view_model/hello_intent.dart';
 import 'package:shopping_app/features/onboarding/presentation/view_model/cubit/onboarding_cubit.dart';
@@ -19,6 +21,7 @@ class _LauncherScreenState extends State<LauncherScreen> {
 
   bool? _hasVisitedHello;
   bool? _isOnboardingSeen;
+  bool? _isLoggedIn;
 
   @override
   void initState() {
@@ -42,19 +45,25 @@ class _LauncherScreenState extends State<LauncherScreen> {
 
     context.read<OnboardingCubit>().intent(IntentIsOnboardingSeen());
     context.read<HelloCubit>().intent(HasVisitedHello());
+    context.read<LauncherCubit>().intent(CheckAuthentication());
   }
 
   void _navigateIfReady() {
-    if (_hasVisitedHello == null || _isOnboardingSeen == null) return;
-    Navigator.pushReplacementNamed(
-      context,
+    if (_hasVisitedHello == null ||
+        _isOnboardingSeen == null ||
+        _isLoggedIn == null) {
+      return;
+    }
 
-      !_isOnboardingSeen!
-          ? AppRoutes.onboardingRoute
-          : !_hasVisitedHello!
-          ? AppRoutes.helloRoute
-          : AppRoutes.appSection, // TODO: check token
-    );
+    if (!_isOnboardingSeen!) {
+      Navigator.pushReplacementNamed(context, AppRoutes.onboardingRoute);
+    } else if (!_hasVisitedHello!) {
+      Navigator.pushReplacementNamed(context, AppRoutes.helloRoute);
+    } else if (!_isLoggedIn!) {
+      Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.appSection);
+    }
   }
 
   @override
@@ -75,6 +84,21 @@ class _LauncherScreenState extends State<LauncherScreen> {
             if (state is OnboardingSaving) {
               _isOnboardingSeen = state.hasVisited;
               debugPrint("_isOnboardingSeen: $_isOnboardingSeen");
+              _navigateIfReady();
+            }
+          },
+        ),
+        BlocListener<LauncherCubit, LauncherState>(
+          listener: (context, state) {
+            if (state is LauncherAuthenticated) {
+              _isLoggedIn = true;
+              debugPrint("_isLoggedIn: $_isLoggedIn");
+              _navigateIfReady();
+            }
+
+            if (state is LauncherUnauthenticated) {
+              _isLoggedIn = false;
+              debugPrint("_isLoggedIn: $_isLoggedIn");
               _navigateIfReady();
             }
           },
