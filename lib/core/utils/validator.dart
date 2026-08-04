@@ -47,8 +47,8 @@ abstract class Validator {
     }
 
     final phone = val.trim();
-    final isValid = RegExp(r'^\+?\d+$').hasMatch(phone);
-    if (!isValid || phone.length != 13) {
+    final isValid = RegExp(r'^01[0125]\d{8}$').hasMatch(phone);
+    if (!isValid) {
       return 'Enter a valid phone number';
     }
 

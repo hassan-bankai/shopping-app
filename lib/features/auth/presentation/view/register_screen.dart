@@ -1,11 +1,18 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/common/widgets/app_btns.dart';
 import 'package:shopping_app/core/common/widgets/custom_text_form_field.dart';
 import 'package:shopping_app/core/constants/app_spacing.dart';
+import 'package:shopping_app/core/routing/app_routes.dart';
 import 'package:shopping_app/core/theme/app_colors.dart';
 import 'package:shopping_app/core/theme/app_theme.dart';
+import 'package:shopping_app/core/utils/app_dialog.dart';
+import 'package:shopping_app/core/utils/app_toastfication.dart';
 import 'package:shopping_app/core/utils/validator.dart';
+import 'package:shopping_app/features/auth/domain/entity/register_entity.dart';
+import 'package:shopping_app/features/auth/presentation/view_model/cubit/register_cubit.dart';
+import 'package:toastification/toastification.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,9 +24,11 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   var formKey = GlobalKey<FormState>();
-  var emailController = TextEditingController();
-  var passwordController = TextEditingController();
-  var confirmPasswordController = TextEditingController();
+  var emailController = TextEditingController(text: 'hassanamr1853@gmail.com');
+  var passwordController = TextEditingController(text: 'hassanAMR@123');
+  var confirmPasswordController = TextEditingController(text: 'hassanAMR@123');
+  var userNameController = TextEditingController(text: 'hassnamr');
+  var phoneNumberController = TextEditingController(text: '01228644286');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,89 +41,148 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.x2),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            verticalSpace(30),
-            Text("Email", style: AppTheme.lightTheme.textTheme.headlineMedium),
-            verticalSpace(5),
-            CustomTextFormField(
-              controller: emailController,
-              validator: Validator.validateEmail,
-              hintText: "Enter your email",
-              keyboardType: TextInputType.emailAddress,
-              action: TextInputAction.next,
-            ),
-            verticalSpace(30),
-            Text(
-              "Password",
-              style: AppTheme.lightTheme.textTheme.headlineMedium,
-            ),
-            verticalSpace(5),
-            CustomTextFormField(
-              controller: passwordController,
-              validator: Validator.validatePassword,
-              hintText: "Enter your password",
-              isPassword: true,
-              keyboardType: TextInputType.emailAddress,
-              action: TextInputAction.next,
-            ),
-            verticalSpace(30),
-            Text(
-              "Confirm Password",
-              style: AppTheme.lightTheme.textTheme.headlineMedium,
-            ),
-            verticalSpace(5),
-            CustomTextFormField(
-              controller: confirmPasswordController,
-              validator: (value) => Validator.validateConfirmPassword(
-                value,
-                passwordController.text,
-              ),
-              hintText: "Enter your confirm password",
-              isPassword: true,
-              keyboardType: TextInputType.emailAddress,
-              action: TextInputAction.done,
-            ),
-            verticalSpace(30),
-            PrimaryBtn(
-              onPressed: () {},
-              child: Text(
-                "Login",
-                style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                  fontSize: 16,
+      body: BlocListener<RegisterCubit, RegisterState>(
+        listener: (context, state) {
+          if (state is RegisterSuccess) {
+            Navigator.pushNamed(context, AppRoutes.loginRoute);
+          } else if (state is RegisterLoading) {
+            AppDialogs.showLoadingDialog(context);
+          } else if (state is RegisterFailure) {
+            AppToast.showToast(
+              title: "Error",
+              description: state.message,
+              type: ToastificationType.error,
+              context: context,
+            );
+          }
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.x2),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                verticalSpace(20),
+                Text(
+                  "User Name",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
-              ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: userNameController,
+                  validator: Validator.validateName,
+                  hintText: "Enter your user name",
+                  keyboardType: TextInputType.text,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(20),
+                Text(
+                  "Email",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: emailController,
+                  validator: Validator.validateEmail,
+                  hintText: "Enter your email",
+                  keyboardType: TextInputType.emailAddress,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(20),
+                Text(
+                  "Phone Number",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: phoneNumberController,
+                  validator: Validator.validatePhoneNumber,
+                  hintText: "Enter your phone number",
+                  keyboardType: TextInputType.phone,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(20),
+                Text(
+                  "Password",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: passwordController,
+                  validator: Validator.validatePassword,
+                  hintText: "Enter your password",
+                  isPassword: true,
+                  keyboardType: TextInputType.emailAddress,
+                  action: TextInputAction.next,
+                ),
+                verticalSpace(20),
+                Text(
+                  "Confirm Password",
+                  style: AppTheme.lightTheme.textTheme.headlineMedium,
+                ),
+                verticalSpace(5),
+                CustomTextFormField(
+                  controller: confirmPasswordController,
+                  validator: (value) => Validator.validateConfirmPassword(
+                    value,
+                    passwordController.text,
+                  ),
+                  hintText: "Enter your confirm password",
+                  isPassword: true,
+                  keyboardType: TextInputType.emailAddress,
+                  action: TextInputAction.done,
+                ),
+                verticalSpace(20),
+                PrimaryBtn(
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      var request = RegisterEntity(
+                        userName: userNameController.text,
+                        email: emailController.text,
+                        phoneNumber: phoneNumberController.text,
+                        password: passwordController.text,
+                        confirmPassword: confirmPasswordController.text,
+                      );
+                      context.read<RegisterCubit>().intent(
+                        RegisterIntentImpl(request: request),
+                      );
+                    }
+                  },
+                  child: Text(
+                    "Sign Up",
+                    style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
+                      fontSize: AppSpacing.x2,
+                    ),
+                  ),
+                ),
+                // verticalSpace(80),
+              ],
             ),
-          ],
+          ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.noAnimation,
-      floatingActionButton: MediaQuery.of(context).viewInsets.bottom == 0
-          ? Align(
-              alignment: Alignment.bottomCenter,
-              child: Text.rich(
-                TextSpan(
-                  text: "Already have an account? ",
-                  style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
-                    fontSize: 14,
-                  ),
-
-                  children: [
+      bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom == 0
+          ? SafeArea(
+              child: SizedBox(
+                height: 60,
+                child: Center(
+                  child: Text.rich(
                     TextSpan(
-                      text: "login",
-                      style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                        fontSize: 14,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.pop(context);
-                        },
+                      text: "Already have an account? ",
+                      style: AppTheme.lightTheme.textTheme.headlineMedium
+                          ?.copyWith(fontSize: 14),
+                      children: [
+                        TextSpan(
+                          text: "Login",
+                          style: AppTheme.lightTheme.textTheme.titleLarge
+                              ?.copyWith(fontSize: 14),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.pop(context),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             )

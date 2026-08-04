@@ -33,6 +33,7 @@ dependencies: # dart fix --apply + dart format .
   bloc: ^9.2.1
   meta: ^1.18.0
   flutter_slidable: ^4.0.3
+  toastification: ^3.2.0
 
 dev_dependencies:
   flutter_test:

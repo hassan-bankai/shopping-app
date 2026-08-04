@@ -24,6 +24,14 @@ import '../../features/account/domain/use_cases/get_user_data_usecase.dart'
 import '../../features/account/presentation/view_model/account_cubit.dart'
     as _i803;
 import '../../features/app_section/view_model/app_section_cubit.dart' as _i437;
+import '../../features/auth/data/repo/auth_data_source_imp.dart' as _i489;
+import '../../features/auth/data/repo/auth_repo_imp.dart' as _i39;
+import '../../features/auth/domain/repo/auth_data_source_interface.dart'
+    as _i701;
+import '../../features/auth/domain/repo/auth_repo_interface.dart' as _i389;
+import '../../features/auth/domain/usecase/register_usecase.dart' as _i769;
+import '../../features/auth/presentation/view_model/cubit/register_cubit.dart'
+    as _i1015;
 import '../../features/cart/data/repo/cart_data_source_imp.dart' as _i615;
 import '../../features/cart/data/repo/cart_repo_impl.dart' as _i234;
 import '../../features/cart/domain/repo/cart_data_source_interface.dart'
@@ -131,6 +139,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i4.OnboardingDataSourceInterface>(
       () => _i180.OnboardingDataSourceImp(),
     );
+    gh.factory<_i701.AuthDataSourceInterface>(
+      () => _i489.AuthDataSourceImp(gh<_i361.Dio>()),
+    );
     gh.factory<_i1029.GetCategoryProductsUseCase>(
       () =>
           _i1029.GetCategoryProductsUseCase(gh<_i889.CategoryRepoInterface>()),
@@ -163,6 +174,15 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i603.HasVisitedHelloUseCase>(),
         gh<_i189.MarkHelloAsVisitedUseCase>(),
       ),
+    );
+    gh.factory<_i769.RegisterUseCase>(
+      () => _i769.RegisterUseCase(gh<_i701.AuthDataSourceInterface>()),
+    );
+    gh.factory<_i389.AuthRepoInterface>(
+      () => _i39.AuthRepoImp(gh<_i701.AuthDataSourceInterface>()),
+    );
+    gh.factory<_i1015.RegisterCubit>(
+      () => _i1015.RegisterCubit(gh<_i769.RegisterUseCase>()),
     );
     gh.lazySingleton<_i1027.HomeRepoInterface>(
       () => _i1024.HomeRepoImpl(gh<_i273.HomeDataSourceInterface>()),
