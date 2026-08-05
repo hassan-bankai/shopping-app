@@ -64,6 +64,21 @@ import '../../features/category/domain/usecase/get_category_products_use_case.da
     as _i1029;
 import '../../features/category/presentation/view_model/category_cubit/category_cubit.dart'
     as _i662;
+import '../../features/favourite/data/repo/favourite_data_source_impl.dart'
+    as _i924;
+import '../../features/favourite/data/repo/favourite_repo_impl.dart' as _i345;
+import '../../features/favourite/domain/repo/favourite_data_source_interface.dart'
+    as _i215;
+import '../../features/favourite/domain/repo/favourite_repo_interface.dart'
+    as _i171;
+import '../../features/favourite/domain/use_case/add_favourite_usecase.dart'
+    as _i622;
+import '../../features/favourite/domain/use_case/get_favourites_usecase.dart'
+    as _i890;
+import '../../features/favourite/domain/use_case/remove_favourite_usecase.dart'
+    as _i824;
+import '../../features/favourite/presentation/view_model/favourite_cubit.dart'
+    as _i640;
 import '../../features/hello/data/repos/hello_data_source_imp.dart' as _i474;
 import '../../features/hello/data/repos/hello_repo_imp.dart' as _i138;
 import '../../features/hello/domain/repo/hello_data_source_interface.dart'
@@ -118,6 +133,7 @@ import '../../features/search/domain/use_case/search_products_by_category_use_ca
     as _i279;
 import '../../features/search/presentation/view_model/bloc/search_products_by_category_bloc.dart'
     as _i832;
+import '../common/favourite/favourite_status_service.dart' as _i384;
 import '../network/dio_module.dart' as _i614;
 import '../storage_helper/secure_storage_helper.dart' as _i510;
 
@@ -130,7 +146,6 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final dioModule = _$DioModule();
     gh.factory<_i510.SecureStorageHelper>(() => _i510.SecureStorageHelper());
-    gh.factory<_i542.ProductSliderCubit>(() => _i542.ProductSliderCubit());
     gh.lazySingleton<_i361.Dio>(() => dioModule.provideDio());
     gh.lazySingleton<_i437.AppSectionCubit>(() => _i437.AppSectionCubit());
     gh.factory<_i570.AuthLocalDataSourceInterface>(
@@ -167,6 +182,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i831.AccountRemoteDataSource>(
       () => _i831.AccountRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
+    gh.lazySingleton<_i215.FavouriteDataSourceInterface>(
+      () => _i924.FavouriteDataSourceImpl(gh<_i361.Dio>()),
+    );
     gh.lazySingleton<_i802.SearchProductsByCategoryDataSourceInterface>(
       () => _i536.SearchProductsByCategoryRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
@@ -174,9 +192,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i371.OnboardingRepoImp(
         onboardingDataSourceInterface: gh<_i4.OnboardingDataSourceInterface>(),
       ),
-    );
-    gh.factory<_i662.CategoryCubit>(
-      () => _i662.CategoryCubit(gh<_i1029.GetCategoryProductsUseCase>()),
     );
     gh.factory<_i603.HasVisitedHelloUseCase>(
       () => _i603.HasVisitedHelloUseCase(gh<_i907.HelloRepoInterface>()),
@@ -189,6 +204,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i603.HasVisitedHelloUseCase>(),
         gh<_i189.MarkHelloAsVisitedUseCase>(),
       ),
+    );
+    gh.lazySingleton<_i171.FavouriteRepoInterface>(
+      () => _i345.FavouriteRepoImpl(gh<_i215.FavouriteDataSourceInterface>()),
     );
     gh.factory<_i389.AuthRepoInterface>(
       () => _i39.AuthRepoImp(
@@ -229,11 +247,35 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i684.AccountRepoInterface>(
       () => _i781.AccountRepoImpl(gh<_i831.AccountRemoteDataSource>()),
     );
+    gh.factory<_i622.AddFavouriteUseCase>(
+      () => _i622.AddFavouriteUseCase(gh<_i171.FavouriteRepoInterface>()),
+    );
+    gh.factory<_i890.GetFavouritesUseCase>(
+      () => _i890.GetFavouritesUseCase(gh<_i171.FavouriteRepoInterface>()),
+    );
+    gh.factory<_i824.RemoveFavouriteUseCase>(
+      () => _i824.RemoveFavouriteUseCase(gh<_i171.FavouriteRepoInterface>()),
+    );
+    gh.lazySingleton<_i384.FavouriteStatusService>(
+      () => _i384.FavouriteStatusService(gh<_i171.FavouriteRepoInterface>()),
+    );
     gh.factory<_i74.GetProductByIdUseCase>(
       () => _i74.GetProductByIdUseCase(gh<_i1027.HomeRepoInterface>()),
     );
     gh.factory<_i205.ProductDetailsCubit>(
       () => _i205.ProductDetailsCubit(gh<_i74.GetProductByIdUseCase>()),
+    );
+    gh.lazySingleton<_i662.CategoryCubit>(
+      () => _i662.CategoryCubit(
+        gh<_i1029.GetCategoryProductsUseCase>(),
+        gh<_i384.FavouriteStatusService>(),
+      ),
+    );
+    gh.lazySingleton<_i640.FavouriteCubit>(
+      () => _i640.FavouriteCubit(
+        gh<_i890.GetFavouritesUseCase>(),
+        gh<_i384.FavouriteStatusService>(),
+      ),
     );
     gh.factory<_i335.DeleteTokenUseCase>(
       () => _i335.DeleteTokenUseCase(gh<_i389.AuthRepoInterface>()),
@@ -262,6 +304,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i111.GetProductsUseCase>(
       () => _i111.GetProductsUseCase(gh<_i1027.HomeRepoInterface>()),
     );
+    gh.factory<_i542.ProductSliderCubit>(
+      () => _i542.ProductSliderCubit(gh<_i384.FavouriteStatusService>()),
+    );
     gh.factory<_i917.OnboardingCubit>(
       () => _i917.OnboardingCubit(
         gh<_i848.SaveOnboardingSeenUseCase>(),
@@ -284,11 +329,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i279.SearchProductsByCategoryUseCase>(),
       ),
     );
-    gh.factory<_i915.ProductsCubit>(
-      () => _i915.ProductsCubit(gh<_i111.GetProductsUseCase>()),
-    );
     gh.factory<_i550.CategoriesCubit>(
       () => _i550.CategoriesCubit(gh<_i315.GetCategoriesUseCase>()),
+    );
+    gh.lazySingleton<_i915.ProductsCubit>(
+      () => _i915.ProductsCubit(
+        gh<_i111.GetProductsUseCase>(),
+        gh<_i384.FavouriteStatusService>(),
+      ),
     );
     gh.factory<_i803.AccountCubit>(
       () => _i803.AccountCubit(

@@ -10,7 +10,9 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
   Future<ResultApi<List<T>>> fetchPage(int page);
 
   void fetchFirstPage() async {
-    emit(state.copyWith(isFirstLoading: true, errorMessage: null));
+    if (state.isFirstLoading) return;
+
+    emit(state.copyWith(isFirstLoading: true, clearError: true));
     try {
       var result = await fetchPage(1);
       switch (result) {
@@ -21,6 +23,7 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
               currentPage: 1,
               isFirstLoading: false,
               hasReachedMax: result.data.length < pageSize,
+              clearError: true,
             ),
           );
         case Error<List<T>>():
@@ -37,9 +40,9 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
   }
 
   void fetchNextPage() async {
-    if (state.isLoadingMore || state.hasReachedMax) return;
+    if (state.isFirstLoading || state.isLoadingMore || state.hasReachedMax) return;
 
-    emit(state.copyWith(isLoadingMore: true));
+    emit(state.copyWith(isLoadingMore: true, clearError: true));
     try {
       var nextPage = state.currentPage + 1;
       var result = await fetchPage(nextPage);
@@ -51,6 +54,7 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
               currentPage: nextPage,
               isLoadingMore: false,
               hasReachedMax: result.data.length < pageSize,
+              clearError: true,
             ),
           );
         case Error<List<T>>():
