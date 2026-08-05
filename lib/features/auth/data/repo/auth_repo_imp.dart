@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shopping_app/core/network/result_api.dart';
 import 'package:shopping_app/features/auth/domain/entity/login_response_entity.dart';
@@ -24,8 +25,15 @@ class AuthRepoImp implements AuthRepoInterface {
     if (result is Success<LoginResponseEntity>) {
       final token = result.data.token;
 
+      debugPrint("API TOKEN = $token");
+
       if (token.isNotEmpty) {
         await local.saveToken(token);
+
+        final saved = await local.getToken();
+        debugPrint("SAVED TOKEN = $saved");
+      } else {
+        debugPrint("TOKEN IS EMPTY");
       }
     }
 

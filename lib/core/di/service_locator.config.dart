@@ -146,10 +146,38 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final dioModule = _$DioModule();
     gh.factory<_i510.SecureStorageHelper>(() => _i510.SecureStorageHelper());
-    gh.lazySingleton<_i361.Dio>(() => dioModule.provideDio());
     gh.lazySingleton<_i437.AppSectionCubit>(() => _i437.AppSectionCubit());
     gh.factory<_i570.AuthLocalDataSourceInterface>(
       () => _i830.AuthLocalDataSourceImp(gh<_i510.SecureStorageHelper>()),
+    );
+    gh.factory<_i289.HelloDataSourceInterface>(
+      () => _i474.HelloDataSourceImp(),
+    );
+    gh.factory<_i907.HelloRepoInterface>(
+      () => _i138.HelloRepoImp(gh<_i289.HelloDataSourceInterface>()),
+    );
+    gh.factory<_i4.OnboardingDataSourceInterface>(
+      () => _i180.OnboardingDataSourceImp(),
+    );
+    gh.factory<_i398.OnboardingRepoInterface>(
+      () => _i371.OnboardingRepoImp(
+        onboardingDataSourceInterface: gh<_i4.OnboardingDataSourceInterface>(),
+      ),
+    );
+    gh.lazySingleton<_i361.Dio>(
+      () => dioModule.provideDio(gh<_i510.SecureStorageHelper>()),
+    );
+    gh.factory<_i603.HasVisitedHelloUseCase>(
+      () => _i603.HasVisitedHelloUseCase(gh<_i907.HelloRepoInterface>()),
+    );
+    gh.factory<_i189.MarkHelloAsVisitedUseCase>(
+      () => _i189.MarkHelloAsVisitedUseCase(gh<_i907.HelloRepoInterface>()),
+    );
+    gh.factory<_i380.HelloCubit>(
+      () => _i380.HelloCubit(
+        gh<_i603.HasVisitedHelloUseCase>(),
+        gh<_i189.MarkHelloAsVisitedUseCase>(),
+      ),
     );
     gh.factory<_i575.CategoryDataSourceInterface>(
       () => _i758.CategoryDataSourceImp(gh<_i361.Dio>()),
@@ -163,14 +191,12 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i1034.CartRemoteDataSource>(
       () => _i615.CartRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
-    gh.factory<_i289.HelloDataSourceInterface>(
-      () => _i474.HelloDataSourceImp(),
+    gh.factory<_i608.IsOnboardingSeenUseCase>(
+      () => _i608.IsOnboardingSeenUseCase(gh<_i398.OnboardingRepoInterface>()),
     );
-    gh.factory<_i907.HelloRepoInterface>(
-      () => _i138.HelloRepoImp(gh<_i289.HelloDataSourceInterface>()),
-    );
-    gh.factory<_i4.OnboardingDataSourceInterface>(
-      () => _i180.OnboardingDataSourceImp(),
+    gh.factory<_i848.SaveOnboardingSeenUseCase>(
+      () =>
+          _i848.SaveOnboardingSeenUseCase(gh<_i398.OnboardingRepoInterface>()),
     );
     gh.factory<_i1029.GetCategoryProductsUseCase>(
       () =>
@@ -188,25 +214,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i802.SearchProductsByCategoryDataSourceInterface>(
       () => _i536.SearchProductsByCategoryRemoteDataSourceImpl(gh<_i361.Dio>()),
     );
-    gh.factory<_i398.OnboardingRepoInterface>(
-      () => _i371.OnboardingRepoImp(
-        onboardingDataSourceInterface: gh<_i4.OnboardingDataSourceInterface>(),
-      ),
-    );
-    gh.factory<_i603.HasVisitedHelloUseCase>(
-      () => _i603.HasVisitedHelloUseCase(gh<_i907.HelloRepoInterface>()),
-    );
-    gh.factory<_i189.MarkHelloAsVisitedUseCase>(
-      () => _i189.MarkHelloAsVisitedUseCase(gh<_i907.HelloRepoInterface>()),
-    );
-    gh.factory<_i380.HelloCubit>(
-      () => _i380.HelloCubit(
-        gh<_i603.HasVisitedHelloUseCase>(),
-        gh<_i189.MarkHelloAsVisitedUseCase>(),
-      ),
-    );
     gh.lazySingleton<_i171.FavouriteRepoInterface>(
       () => _i345.FavouriteRepoImpl(gh<_i215.FavouriteDataSourceInterface>()),
+    );
+    gh.factory<_i917.OnboardingCubit>(
+      () => _i917.OnboardingCubit(
+        gh<_i848.SaveOnboardingSeenUseCase>(),
+        gh<_i608.IsOnboardingSeenUseCase>(),
+      ),
     );
     gh.factory<_i389.AuthRepoInterface>(
       () => _i39.AuthRepoImp(
@@ -227,13 +242,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i818.CartCubit>(
       () => _i818.CartCubit(gh<_i76.CartRepoInterface>()),
-    );
-    gh.factory<_i608.IsOnboardingSeenUseCase>(
-      () => _i608.IsOnboardingSeenUseCase(gh<_i398.OnboardingRepoInterface>()),
-    );
-    gh.factory<_i848.SaveOnboardingSeenUseCase>(
-      () =>
-          _i848.SaveOnboardingSeenUseCase(gh<_i398.OnboardingRepoInterface>()),
     );
     gh.factory<_i252.AddToCartUseCase>(
       () => _i252.AddToCartUseCase(gh<_i76.CartRepoInterface>()),
@@ -306,12 +314,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i542.ProductSliderCubit>(
       () => _i542.ProductSliderCubit(gh<_i384.FavouriteStatusService>()),
-    );
-    gh.factory<_i917.OnboardingCubit>(
-      () => _i917.OnboardingCubit(
-        gh<_i848.SaveOnboardingSeenUseCase>(),
-        gh<_i608.IsOnboardingSeenUseCase>(),
-      ),
     );
     gh.factory<_i849.RegisterCubit>(
       () => _i849.RegisterCubit(gh<_i769.RegisterUseCase>()),
