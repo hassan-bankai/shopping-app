@@ -4,20 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/common/widgets/app_btns.dart';
 import 'package:shopping_app/core/common/widgets/custom_text_form_field.dart';
 import 'package:shopping_app/core/constants/app_spacing.dart';
-import 'package:shopping_app/core/di/service_locator.dart';
+import 'package:shopping_app/core/constants/app_strings.dart';
 import 'package:shopping_app/core/routing/app_routes.dart';
 import 'package:shopping_app/core/theme/app_colors.dart';
 import 'package:shopping_app/core/theme/app_theme.dart';
 import 'package:shopping_app/core/utils/app_dialog.dart';
 import 'package:shopping_app/core/utils/app_toastfication.dart';
 import 'package:shopping_app/core/utils/validator.dart';
-import 'package:shopping_app/features/auth/domain/usecase/get_token_usecase.dart';
 import 'package:shopping_app/features/auth/presentation/view_model/cubit/login/login_cubit.dart';
 import 'package:toastification/toastification.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-  static const String routeName = "LoginScreen";
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -25,16 +23,14 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController(
-    text: "hassanamr841981@gmail.com",
-  );
-  final passwordController = TextEditingController(text: "hassanAMR@123");
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Login",
+          AppStrings.login,
           style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
             color: AppColors.primary,
           ),
@@ -50,14 +46,12 @@ class _LoginScreenState extends State<LoginScreen> {
           if (state is LoginSuccess) {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.appSection);
-            final token = await serviceLocator<GetTokenUseCase>().invoke();
-            debugPrint("TOKEN = $token");
           }
           if (state is LoginError) {
             Navigator.pop(context);
             AppToast.showToast(
               context: context,
-              title: 'error',
+              title: AppStrings.errorTitle,
               description: state.errorMessage,
               type: ToastificationType.error,
             );
@@ -72,27 +66,27 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 verticalSpace(30),
                 Text(
-                  "Email",
+                  AppStrings.email,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: emailController,
                   validator: Validator.validateEmail,
-                  hintText: "Enter your email",
+                  hintText: AppStrings.enterEmail,
                   keyboardType: TextInputType.emailAddress,
                   action: TextInputAction.next,
                 ),
                 verticalSpace(30),
                 Text(
-                  "Password",
+                  AppStrings.password,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: passwordController,
                   validator: Validator.validatePassword,
-                  hintText: "Enter your password",
+                  hintText: AppStrings.enterPassword,
                   isPassword: true,
                   keyboardType: TextInputType.emailAddress,
                   action: TextInputAction.next,
@@ -109,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                   child: Text(
-                    "Login",
+                    AppStrings.login,
                     style: AppTheme.lightTheme.textTheme.labelMedium,
                   ),
                 ),
@@ -125,14 +119,14 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.bottomCenter,
               child: Text.rich(
                 TextSpan(
-                  text: "Don't have an account? ",
+                  text: AppStrings.dontHaveAccount,
                   style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
                     fontSize: 14,
                   ),
 
                   children: [
                     TextSpan(
-                      text: "Sign Up",
+                      text: AppStrings.signUp,
                       style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
                         fontSize: 14,
                       ),

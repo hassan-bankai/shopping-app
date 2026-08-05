@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/core/constants/app_spacing.dart';
+import 'package:shopping_app/core/theme/app_colors.dart';
 
 class CustomTextFormField extends StatefulWidget {
   const CustomTextFormField({
@@ -60,15 +62,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       obscureText: obscureText,
 
       keyboardType: widget.keyboardType,
-      // inputFormatters: widget.inputFormatters,
+
       textInputAction: widget.action ?? TextInputAction.next,
       focusNode: widget.focusNode,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      style: TextStyle(
-        fontSize: 16,
-        // color: AppColor.primary,
-        fontWeight: FontWeight.w500,
-      ),
+      style: TextStyle(fontSize: AppSpacing.x2, fontWeight: FontWeight.w500),
 
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
@@ -76,12 +74,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         filled: true,
         hintText: widget.hintText,
         hintStyle: TextStyle(
-          fontSize: 16,
-          // color: AppColor.gray,
+          fontSize: AppSpacing.x2,
+
           fontWeight: FontWeight.w500,
         ),
         errorMaxLines: 4,
-        errorStyle: const TextStyle(color: Colors.red),
+        errorStyle: const TextStyle(color: AppColors.redBorder),
         prefixIcon: widget.prefixIcon,
         prefix: widget.prefix,
         suffixIcon: widget.isPassword
@@ -89,7 +87,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                 onTap: _toggleObscureText,
                 child: Icon(
                   obscureText ? Icons.visibility_off : Icons.visibility,
-                  // color: AppColor.gray,
+
                   size: 27,
                 ),
               )
@@ -98,11 +96,20 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           horizontal: 13,
           vertical: 14,
         ),
-        border: outlineInputBorder(color: Colors.grey, width: 1),
-        enabledBorder: outlineInputBorder(color: Colors.grey, width: 1),
-        focusedBorder: outlineInputBorder(color: Colors.black, width: 1),
-        errorBorder: outlineInputBorder(color: Colors.red, width: 1),
-        focusedErrorBorder: outlineInputBorder(color: Colors.red, width: 1),
+        border: outlineInputBorder(color: AppColors.grayBorder, width: 1),
+        enabledBorder: outlineInputBorder(
+          color: AppColors.grayBorder,
+          width: 1,
+        ),
+        focusedBorder: outlineInputBorder(
+          color: AppColors.blackBorder,
+          width: 1,
+        ),
+        errorBorder: outlineInputBorder(color: AppColors.redBorder, width: 1),
+        focusedErrorBorder: outlineInputBorder(
+          color: AppColors.redBorder,
+          width: 1,
+        ),
       ),
     );
   }

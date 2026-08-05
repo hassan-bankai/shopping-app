@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/common/widgets/app_btns.dart';
 import 'package:shopping_app/core/common/widgets/custom_text_form_field.dart';
 import 'package:shopping_app/core/constants/app_spacing.dart';
+import 'package:shopping_app/core/constants/app_strings.dart';
 import 'package:shopping_app/core/routing/app_routes.dart';
 import 'package:shopping_app/core/theme/app_colors.dart';
 import 'package:shopping_app/core/theme/app_theme.dart';
@@ -16,7 +17,6 @@ import 'package:toastification/toastification.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
-  static const String routeName = "RegisterScreen";
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -24,17 +24,17 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   var formKey = GlobalKey<FormState>();
-  var emailController = TextEditingController(text: 'hassanamr1853@gmail.com');
-  var passwordController = TextEditingController(text: 'hassanAMR@123');
-  var confirmPasswordController = TextEditingController(text: 'hassanAMR@123');
-  var userNameController = TextEditingController(text: 'hassnamr');
-  var phoneNumberController = TextEditingController(text: '01228644286');
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
+  var confirmPasswordController = TextEditingController();
+  var userNameController = TextEditingController();
+  var phoneNumberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Sign Up",
+          AppStrings.signUp,
           style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
             color: AppColors.primary,
           ),
@@ -44,12 +44,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: BlocListener<RegisterCubit, RegisterState>(
         listener: (context, state) {
           if (state is RegisterSuccess) {
+            AppToast.showToast(
+              title: AppStrings.successTitle,
+              description: AppStrings.successRegisterMessage,
+              type: ToastificationType.success,
+              context: context,
+            );
             Navigator.pushNamed(context, AppRoutes.loginRoute);
           } else if (state is RegisterLoading) {
             AppDialogs.showLoadingDialog(context);
           } else if (state is RegisterFailure) {
             AppToast.showToast(
-              title: "Error",
+              title: AppStrings.errorTitle,
               description: state.message,
               type: ToastificationType.error,
               context: context,
@@ -65,60 +71,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 verticalSpace(20),
                 Text(
-                  "User Name",
+                  AppStrings.userName,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: userNameController,
                   validator: Validator.validateName,
-                  hintText: "Enter your user name",
+                  hintText: AppStrings.enterUserName,
                   keyboardType: TextInputType.text,
                   action: TextInputAction.next,
                 ),
                 verticalSpace(20),
                 Text(
-                  "Email",
+                  AppStrings.email,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: emailController,
                   validator: Validator.validateEmail,
-                  hintText: "Enter your email",
+                  hintText: AppStrings.enterEmail,
                   keyboardType: TextInputType.emailAddress,
                   action: TextInputAction.next,
                 ),
                 verticalSpace(20),
                 Text(
-                  "Phone Number",
+                  AppStrings.phoneNumber,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: phoneNumberController,
                   validator: Validator.validatePhoneNumber,
-                  hintText: "Enter your phone number",
+                  hintText: AppStrings.enterPhoneNumber,
                   keyboardType: TextInputType.phone,
                   action: TextInputAction.next,
                 ),
                 verticalSpace(20),
                 Text(
-                  "Password",
+                  AppStrings.password,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
                 CustomTextFormField(
                   controller: passwordController,
                   validator: Validator.validatePassword,
-                  hintText: "Enter your password",
+                  hintText: AppStrings.enterPassword,
                   isPassword: true,
                   keyboardType: TextInputType.emailAddress,
                   action: TextInputAction.next,
                 ),
                 verticalSpace(20),
                 Text(
-                  "Confirm Password",
+                  AppStrings.confirmPassword,
                   style: AppTheme.lightTheme.textTheme.headlineMedium,
                 ),
                 verticalSpace(5),
@@ -128,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     value,
                     passwordController.text,
                   ),
-                  hintText: "Enter your confirm password",
+                  hintText: AppStrings.enterConfirmPassword,
                   isPassword: true,
                   keyboardType: TextInputType.emailAddress,
                   action: TextInputAction.done,
@@ -150,13 +156,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                   },
                   child: Text(
-                    "Sign Up",
+                    AppStrings.signUp,
                     style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
                       fontSize: AppSpacing.x2,
                     ),
                   ),
                 ),
-                // verticalSpace(80),
               ],
             ),
           ),
@@ -169,12 +174,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Center(
                   child: Text.rich(
                     TextSpan(
-                      text: "Already have an account? ",
+                      text: AppStrings.alreadyHaveAccount,
                       style: AppTheme.lightTheme.textTheme.headlineMedium
                           ?.copyWith(fontSize: 14),
                       children: [
                         TextSpan(
-                          text: "Login",
+                          text: AppStrings.login,
                           style: AppTheme.lightTheme.textTheme.titleLarge
                               ?.copyWith(fontSize: 14),
                           recognizer: TapGestureRecognizer()

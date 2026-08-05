@@ -30,4 +30,8 @@ abstract final class AppColors {
   static const dotColor = Color(0xffAAA198);
   static const reviewerBgColor = Color(0xffE4E4E4);
   static const reviewerAvatar = Color(0xFF555555);
+
+  static const redBorder = Color(0xffF44336);
+  static const blackBorder = Color(0xFF000000);
+  static const grayBorder = Color(0xff9E9E9E);
 }

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_app/core/constants/app_assets.dart';
 import 'package:shopping_app/core/routing/app_routes.dart';
 import 'package:shopping_app/features/auth/presentation/view_model/cubit/launcher/cubit/launcher_cubit.dart';
-import 'package:shopping_app/features/auth/presentation/view_model/cubit/login/login_cubit.dart';
 import 'package:shopping_app/features/hello/presentation/view_model/hello_cubit.dart';
 import 'package:shopping_app/features/hello/presentation/view_model/hello_intent.dart';
 import 'package:shopping_app/features/onboarding/presentation/view_model/cubit/onboarding_cubit.dart';
