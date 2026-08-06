@@ -49,7 +49,6 @@ class CartCubit extends Cubit<CartState> {
 
     switch (result) {
       case Success(data: final data):
-        debugPrint("SERVER QUANTITY = ${data.first.quantity}");
         emit(state.copyWith(cartStatus: BaseSuccessState(data: data)));
         break;
       case Error(messageError: final message):

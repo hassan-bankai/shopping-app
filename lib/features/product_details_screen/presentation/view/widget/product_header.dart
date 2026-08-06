@@ -76,29 +76,25 @@ class ProductHeader extends StatelessWidget {
                 ),
               ),
 
-              const Spacer(),
-
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.star, color: AppColors.primary, size: 20),
-                      horizontalSpace(4),
-                      Text(
-                        rating.toStringAsFixed(1),
-                        style: AppTheme.lightTheme.textTheme.headlineMedium
-                            ?.copyWith(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    '($reviewCount reviews)',
-                    style: AppTheme.lightTheme.textTheme.titleMedium,
-                  ),
-                ],
+              // const Spacer(),
+              horizontalSpace(30),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.star, color: AppColors.primary, size: 20),
+              horizontalSpace(4),
+              Text(
+                rating.toStringAsFixed(1),
+                style: AppTheme.lightTheme.textTheme.headlineMedium?.copyWith(
+                  fontSize: 14,
+                ),
               ),
             ],
+          ),
+          Text(
+            '($reviewCount reviews)',
+            style: AppTheme.lightTheme.textTheme.titleMedium,
           ),
         ],
       ),
