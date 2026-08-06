@@ -26,7 +26,8 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  final CarouselSliderController carouselcontroller = CarouselSliderController();
+  final CarouselSliderController carouselcontroller =
+      CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +35,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       providers: [
         BlocProvider(create: (_) => serviceLocator<ProductSliderCubit>()),
         BlocProvider(
-          create: (_) => serviceLocator<ProductDetailsCubit>()
-            ..intent(FetchProductDetails(widget.productId)),
+          create: (_) =>
+              serviceLocator<ProductDetailsCubit>()
+                ..intent(FetchProductDetails(widget.productId)),
         ),
-        // ملحوظة: لو عاوز الـ Cart يفضل مسمع في بقية الابلكيشن لازم الـ BlocProvider ده يكون فوق في MaterialApp
-        BlocProvider(create: (_) => serviceLocator<CartCubit>()),
       ],
       child: Builder(
         builder: (context) {
           return BlocListener<ProductDetailsCubit, ProductDetailsState>(
             listenWhen: (previous, current) =>
-            previous is! ProductDetailsSuccess && current is ProductDetailsSuccess,
+                previous is! ProductDetailsSuccess &&
+                current is ProductDetailsSuccess,
             listener: (context, state) {
               if (state is ProductDetailsSuccess) {
-                context.read<ProductSliderCubit>().syncFavoriteStatus(state.product.id);
+                context.read<ProductSliderCubit>().syncFavoriteStatus(
+                  state.product.id,
+                );
               }
             },
             child: Scaffold(
@@ -63,15 +66,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         padding: EdgeInsets.only(
                           left: AppSpacing.x2,
                           right: AppSpacing.x2,
-                          top: 50, // مساحة علوية عشان زرار الرجوع ما يغطيش على أول السلايدر
-                          bottom: AppSpacing.x4, // مساحة سفيلة عشان الزرار اللي تحت
+                          top:
+                              50, // مساحة علوية عشان زرار الرجوع ما يغطيش على أول السلايدر
+                          bottom:
+                              AppSpacing.x4, // مساحة سفيلة عشان الزرار اللي تحت
                         ),
                         child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
                           builder: (context, state) {
                             if (state is ProductDetailsLoading) {
                               return const SizedBox(
                                 height: 300,
-                                child: Center(child: CircularProgressIndicator()),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
                             }
                             if (state is ProductDetailsFailure) {
@@ -80,7 +87,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 child: Center(
                                   child: Text(
                                     state.errorMessage,
-                                    style: AppTheme.lightTheme.textTheme.bodyMedium
+                                    style: AppTheme
+                                        .lightTheme
+                                        .textTheme
+                                        .bodyMedium
                                         ?.copyWith(color: AppColors.error),
                                   ),
                                 ),
@@ -91,7 +101,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  BlocBuilder<ProductSliderCubit, ProductSliderState>(
+                                  BlocBuilder<
+                                    ProductSliderCubit,
+                                    ProductSliderState
+                                  >(
                                     builder: (context, sliderState) {
                                       return ProductImageCarousel(
                                         images: product.images,
@@ -103,7 +116,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                           if (!context.mounted) return;
                                           switch (result) {
                                             case Success<bool>():
-                                              ScaffoldMessenger.of(context).showSnackBar(
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
                                                 SnackBar(
                                                   content: Text(
                                                     result.data
@@ -113,8 +128,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                                 ),
                                               );
                                             case Error<bool>():
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text(result.messageError)),
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    result.messageError,
+                                                  ),
+                                                ),
                                               );
                                           }
                                         },
@@ -123,12 +144,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             : Icons.favorite_border,
                                         color: AppColors.primary,
                                         index: sliderState.currentIndex,
-                                        nextSlide: () => carouselcontroller.nextPage(),
-                                        prevSlide: () => carouselcontroller.previousPage(),
+                                        nextSlide: () =>
+                                            carouselcontroller.nextPage(),
+                                        prevSlide: () =>
+                                            carouselcontroller.previousPage(),
                                         onPageChanged: (index, _) {
-                                          context.read<ProductSliderCubit>().intent(
-                                            ProductSliderChangePage(index),
-                                          );
+                                          context
+                                              .read<ProductSliderCubit>()
+                                              .intent(
+                                                ProductSliderChangePage(index),
+                                              );
                                         },
                                       );
                                     },
@@ -209,10 +234,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                         const SizedBox(width: 8),
                         Text(
                           'Add to cart',
-                          style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                            color: AppColors.background,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: AppTheme.lightTheme.textTheme.titleMedium
+                              ?.copyWith(
+                                color: AppColors.background,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ],
                     ),

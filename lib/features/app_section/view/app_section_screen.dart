@@ -14,11 +14,8 @@ class AppSectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider.value(value: serviceLocator<AppSectionCubit>()),
-        BlocProvider.value(value: serviceLocator<CartCubit>()),
-      ],
+    return BlocProvider.value(
+      value: serviceLocator<AppSectionCubit>(),
       child: BlocBuilder<AppSectionCubit, int>(
         builder: (context, selectedIndex) {
           return BlocBuilder<CartCubit, CartState>(
