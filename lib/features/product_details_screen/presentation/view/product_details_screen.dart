@@ -99,7 +99,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                         isFav: () async {
                                           final result = await context
                                               .read<ProductSliderCubit>()
-                                              .toggleFavorite(product.id);
+                                              .toggleFavorite(product);
                                           if (!context.mounted) return;
                                           switch (result) {
                                             case Success<bool>():

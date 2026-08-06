@@ -240,7 +240,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i802.SearchProductsByCategoryDataSourceInterface>(),
       ),
     );
-    gh.lazySingleton<_i818.CartCubit>(
+    gh.factory<_i818.CartCubit>(
       () => _i818.CartCubit(gh<_i76.CartRepoInterface>()),
     );
     gh.factory<_i252.AddToCartUseCase>(

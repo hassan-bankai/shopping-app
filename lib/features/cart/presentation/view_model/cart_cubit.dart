@@ -8,7 +8,7 @@ import '../../domain/repo/cart_repo_interface.dart';
 import 'cart_intent.dart';
 import 'cart_state.dart';
 
-@lazySingleton
+@injectable
 class CartCubit extends Cubit<CartState> {
   final CartRepoInterface _cartRepo;
 
