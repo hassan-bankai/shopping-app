@@ -24,4 +24,7 @@ abstract class ApiConstants {
 
   static const String token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5ZDJhYzJmY2JhYjk5MWY1NWU4NGQ5MiIsImlhdCI6MTc4NTMzMDA0NywiZXhwIjoxNzg3OTIyMDQ3fQ.Q69NkVQI4Sl6X2bCOfaCMfCLcR-Kl6pmHawFpFDdxNw";
+  static const Map<String, dynamic> headers = {
+    'Content-Type': 'application/json',
+  };
 }

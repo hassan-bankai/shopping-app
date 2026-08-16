@@ -70,10 +70,15 @@ class AccountCubit extends Cubit<AccountState> {
   }
 
   Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      selectedImagePath = image.path;
-      emit(AccountImageSelectedState(image.path));
+    try {
+      debugPrint("Pick Image Clicked");
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        selectedImagePath = image.path;
+        emit(AccountImageSelectedState(image.path));
+      }
+    } catch (e) {
+      debugPrint("Error picking image: $e");
     }
   }
 

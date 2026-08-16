@@ -44,44 +44,51 @@ class AccountSuccessSection extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  height: 220,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [AppColors.primary, AppColors.primaryLight],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage(AppAssets.appIcon),
-                      fit: BoxFit.contain,
-                      opacity: 0.6,
+            SizedBox(
+              height: 270,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 220,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [AppColors.primary, AppColors.primaryLight],
+                        ),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(50),
+                        ),
+                        image: const DecorationImage(
+                          image: AssetImage(AppAssets.appIcon),
+                          fit: BoxFit.contain,
+                          opacity: 0.6,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: -50,
-                  child: Container(
-                    padding: AppSpacing.allX1 / 2,
-                    decoration: BoxDecoration(
-                      color: AppColors.surface,
-                      shape: BoxShape.circle,
-                      boxShadow: [AppStyles.kBlackShadowSmall],
+                  Positioned(
+                    bottom: 0,
+                    child: Container(
+                      padding: AppSpacing.allX1 / 2,
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        shape: BoxShape.circle,
+                        boxShadow: [AppStyles.kBlackShadowSmall],
+                      ),
+                      child: ProfileImageWidget(cubit: cubit, userEntity: data),
                     ),
-                    child: ProfileImageWidget(cubit: cubit, userEntity: data),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            verticalSpace(75),
+            verticalSpace(25),
 
             Padding(
               padding: AppSpacing.horizontalX3,
