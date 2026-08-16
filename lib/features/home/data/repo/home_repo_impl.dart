@@ -19,7 +19,9 @@ class HomeRepoImpl implements HomeRepoInterface {
 
     switch (result) {
       case Success<CategoriesDto>():
-        return Success(result.data.list?.map((e) => e.toEntity()).toList() ?? []);
+        return Success(
+          result.data.list?.map((e) => e.toEntity()).toList() ?? [],
+        );
 
       case Error<CategoriesDto>():
         return Error(result.messageError);
@@ -27,7 +29,9 @@ class HomeRepoImpl implements HomeRepoInterface {
   }
 
   @override
-  Future<ResultApi<List<ProductItemEntity>>> getProducts({required int page}) async {
+  Future<ResultApi<List<ProductItemEntity>>> getProducts({
+    required int page,
+  }) async {
     final result = await _homeDataSource.getProducts(page: page);
 
     switch (result) {
@@ -35,6 +39,19 @@ class HomeRepoImpl implements HomeRepoInterface {
         return Success(result.data.map((e) => e.toEntity()).toList());
 
       case Error<List<ProductItemDto>>():
+        return Error(result.messageError);
+    }
+  }
+  
+  @override
+  Future<ResultApi<ProductItemEntity>> getProductById({required int productId}) async {
+     final result = await _homeDataSource.getProductById(productId: productId);
+
+    switch (result) {
+      case Success<ProductItemDto>():
+        return Success(result.data.toEntity());
+
+      case Error<ProductItemDto>():
         return Error(result.messageError);
     }
   }

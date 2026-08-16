@@ -10,22 +10,29 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
   Future<ResultApi<List<T>>> fetchPage(int page);
 
   void fetchFirstPage() async {
-    emit(state.copyWith(isFirstLoading: true, errorMessage: null));
+    if (state.isFirstLoading) return;
+
+    emit(state.copyWith(isFirstLoading: true, clearError: true));
     try {
       var result = await fetchPage(1);
       switch (result) {
         case Success<List<T>>():
-          emit(state.copyWith(
-            items: result.data,
-            currentPage: 1,
-            isFirstLoading: false,
-            hasReachedMax: result.data.length < pageSize,
-          ));
+          emit(
+            state.copyWith(
+              items: result.data,
+              currentPage: 1,
+              isFirstLoading: false,
+              hasReachedMax: result.data.length < pageSize,
+              clearError: true,
+            ),
+          );
         case Error<List<T>>():
-          emit(state.copyWith(
-            isFirstLoading: false,
-            errorMessage: result.messageError,
-          ));
+          emit(
+            state.copyWith(
+              isFirstLoading: false,
+              errorMessage: result.messageError,
+            ),
+          );
       }
     } catch (e) {
       emit(state.copyWith(isFirstLoading: false, errorMessage: e.toString()));
@@ -33,26 +40,30 @@ abstract class PaginatedCubit<T> extends Cubit<PaginationState<T>> {
   }
 
   void fetchNextPage() async {
-    print("Fetch Next Page");
-    if (state.isLoadingMore || state.hasReachedMax) return;
+    if (state.isFirstLoading || state.isLoadingMore || state.hasReachedMax) return;
 
-    emit(state.copyWith(isLoadingMore: true));
+    emit(state.copyWith(isLoadingMore: true, clearError: true));
     try {
       var nextPage = state.currentPage + 1;
       var result = await fetchPage(nextPage);
       switch (result) {
         case Success<List<T>>():
-          emit(state.copyWith(
-            items: [...state.items, ...result.data],
-            currentPage: nextPage,
-            isLoadingMore: false,
-            hasReachedMax: result.data.length < pageSize,
-          ));
+          emit(
+            state.copyWith(
+              items: [...state.items, ...result.data],
+              currentPage: nextPage,
+              isLoadingMore: false,
+              hasReachedMax: result.data.length < pageSize,
+              clearError: true,
+            ),
+          );
         case Error<List<T>>():
-          emit(state.copyWith(
-            isLoadingMore: false,
-            errorMessage: result.messageError,
-          ));
+          emit(
+            state.copyWith(
+              isLoadingMore: false,
+              errorMessage: result.messageError,
+            ),
+          );
       }
     } catch (e) {
       emit(state.copyWith(isLoadingMore: false, errorMessage: e.toString()));
